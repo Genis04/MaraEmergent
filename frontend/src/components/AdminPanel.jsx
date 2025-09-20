@@ -193,14 +193,93 @@ export const AdminPanel = ({ onClose }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-emerald-700 mb-2">URL de Imagen</label>
-              <Input
-                value={formData.imagen}
-                onChange={(e) => setFormData(prev => ({ ...prev, imagen: e.target.value }))}
-                placeholder="https://ejemplo.com/imagen.jpg"
-                className="border-emerald-200 focus:border-emerald-400"
-                required
-              />
+              <label className="block text-sm font-medium text-emerald-700 mb-2">Imagen del Producto</label>
+              
+              <Tabs value={imageOption} onValueChange={setImageOption} className="w-full">
+                <TabsList className="grid w-full grid-cols-2 mb-4">
+                  <TabsTrigger value="url" className="text-xs">URL de Imagen</TabsTrigger>
+                  <TabsTrigger value="upload" className="text-xs">Subir Archivo</TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="url">
+                  <Input
+                    value={formData.imagen}
+                    onChange={(e) => {
+                      setFormData(prev => ({ ...prev, imagen: e.target.value }));
+                      setImagePreview(e.target.value);
+                      setSelectedImage(null);
+                    }}
+                    placeholder="https://ejemplo.com/imagen.jpg"
+                    className="border-emerald-200 focus:border-emerald-400"
+                  />
+                </TabsContent>
+                
+                <TabsContent value="upload">
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-4">
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="hidden"
+                        id="image-upload"
+                      />
+                      <label
+                        htmlFor="image-upload"
+                        className="flex items-center gap-2 px-4 py-2 bg-emerald-100 text-emerald-700 rounded-lg cursor-pointer hover:bg-emerald-200 transition-colors duration-200 border border-emerald-200"
+                      >
+                        <Upload className="w-4 h-4" />
+                        Seleccionar Imagen
+                      </label>
+                      {selectedImage && (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={clearImage}
+                          className="text-emerald-600 border-emerald-200 hover:bg-emerald-50"
+                        >
+                          <X className="w-4 h-4 mr-2" />
+                          Quitar
+                        </Button>
+                      )}
+                    </div>
+                    
+                    {selectedImage && (
+                      <div className="text-sm text-emerald-600 bg-emerald-50 p-2 rounded">
+                        <strong>Archivo seleccionado:</strong> {selectedImage.name} ({(selectedImage.size / 1024 / 1024).toFixed(2)} MB)
+                      </div>
+                    )}
+                  </div>
+                </TabsContent>
+              </Tabs>
+              
+              {/* Preview de la imagen */}
+              {imagePreview && (
+                <div className="mt-4">
+                  <p className="text-sm font-medium text-emerald-700 mb-2">Vista previa:</p>
+                  <div className="relative inline-block">
+                    <img
+                      src={imagePreview}
+                      alt="Vista previa"
+                      className="w-32 h-24 object-cover rounded-lg border border-emerald-200"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextSibling.style.display = 'flex';
+                      }}
+                    />
+                    <div 
+                      className="w-32 h-24 bg-emerald-100 rounded-lg border border-emerald-200 hidden items-center justify-center"
+                    >
+                      <div className="text-center text-emerald-600">
+                        <Image className="w-6 h-6 mx-auto mb-1" />
+                        <p className="text-xs">Error al cargar</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
