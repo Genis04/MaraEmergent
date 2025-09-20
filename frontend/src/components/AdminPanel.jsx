@@ -12,6 +12,10 @@ import { mockData } from '../mock';
 export const AdminPanel = ({ onClose }) => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedSubcategory, setSelectedSubcategory] = useState('');
+  const [imageOption, setImageOption] = useState('url'); // 'url' or 'upload'
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState('');
+  const fileInputRef = useRef(null);
   const [formData, setFormData] = useState({
     titulo: '',
     descripcion: '',
