@@ -191,7 +191,14 @@ const Home = () => {
         </div>
       </footer>
 
-      {showAdmin && <AdminPanel onClose={() => setShowAdmin(false)} />}
+      {showAuth && (
+        <AuthModal 
+          onClose={handleAuthClose}
+          onSuccess={handleAuthSuccess}
+        />
+      )}
+
+      {showAdmin && <AdminPanel onClose={handleAdminClose} />}
     </div>
   );
 };
