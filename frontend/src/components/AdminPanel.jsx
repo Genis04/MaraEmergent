@@ -37,9 +37,55 @@ export const AdminPanel = ({ onClose }) => {
     animes: { name: 'Animes' }
   };
 
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      // Validar que sea una imagen
+      if (!file.type.startsWith('image/')) {
+        alert('Por favor selecciona un archivo de imagen válido');
+        return;
+      }
+      
+      // Validar tamaño (máximo 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('La imagen es demasiado grande. Por favor selecciona una imagen menor a 5MB');
+        return;
+      }
+
+      setSelectedImage(file);
+      
+      // Crear preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+        setFormData(prev => ({ ...prev, imagen: reader.result }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const clearImage = () => {
+    setSelectedImage(null);
+    setImagePreview('');
+    setFormData(prev => ({ ...prev, imagen: '' }));
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Guardando producto:', formData);
+    
+    // Validar que tenga imagen
+    if (!formData.imagen) {
+      alert('Por favor agrega una imagen');
+      return;
+    }
+    
+    console.log('Guardando producto:', {
+      ...formData,
+      imageFile: selectedImage // Para enviar al backend
+    });
     // Aquí se implementará la integración con el backend
     alert('Producto guardado exitosamente (mock)');
     resetForm();
@@ -54,6 +100,12 @@ export const AdminPanel = ({ onClose }) => {
       fechaLanzamiento: '',
       plataformas: []
     });
+    setSelectedImage(null);
+    setImagePreview('');
+    setImageOption('url');
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
   const addPlatform = () => {
