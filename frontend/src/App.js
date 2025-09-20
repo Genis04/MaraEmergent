@@ -10,6 +10,24 @@ import { mockData } from "./mock";
 
 const Home = () => {
   const [showAdmin, setShowAdmin] = useState(false);
+  const [showAuth, setShowAuth] = useState(false);
+
+  const handleAdminClick = () => {
+    setShowAuth(true);
+  };
+
+  const handleAuthSuccess = () => {
+    setShowAuth(false);
+    setShowAdmin(true);
+  };
+
+  const handleAuthClose = () => {
+    setShowAuth(false);
+  };
+
+  const handleAdminClose = () => {
+    setShowAdmin(false);
+  };
 
   const renderProductGrid = (products) => {
     if (!products || products.length === 0) {
