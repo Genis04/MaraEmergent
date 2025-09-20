@@ -98,7 +98,7 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-emerald-50">
-      <Header onAdminClick={() => setShowAdmin(true)} />
+      <Header onAdminClick={handleAdminClick} />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center mb-12">
