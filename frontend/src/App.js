@@ -13,6 +13,7 @@ const Home = () => {
   const [showAdmin, setShowAdmin] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [logo, setLogo] = useState('');
 
   const handleAdminClick = () => {
     setShowAuth(true);
@@ -33,6 +34,10 @@ const Home = () => {
 
   const handleSearch = (term) => {
     setSearchTerm(term.toLowerCase());
+  };
+
+  const handleLogoChange = (newLogo) => {
+    setLogo(newLogo);
   };
 
   const filterProducts = (products) => {
