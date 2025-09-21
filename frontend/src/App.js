@@ -12,6 +12,7 @@ import { mockData } from "./mock";
 const Home = () => {
   const [showAdmin, setShowAdmin] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const handleAdminClick = () => {
     setShowAuth(true);
@@ -28,6 +29,23 @@ const Home = () => {
 
   const handleAdminClose = () => {
     setShowAdmin(false);
+  };
+
+  const handleSearch = (term) => {
+    setSearchTerm(term.toLowerCase());
+  };
+
+  const filterProducts = (products) => {
+    if (!searchTerm) return products;
+    
+    return products.filter(product => 
+      product.titulo.toLowerCase().includes(searchTerm) ||
+      product.descripcion.toLowerCase().includes(searchTerm) ||
+      product.pais.toLowerCase().includes(searchTerm) ||
+      (product.plataformas && product.plataformas.some(p => 
+        p.toLowerCase().includes(searchTerm)
+      ))
+    );
   };
 
   const renderProductGrid = (products) => {
