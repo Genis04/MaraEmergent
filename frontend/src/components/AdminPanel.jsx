@@ -191,7 +191,106 @@ export const AdminPanel = ({ onClose, onLogoChange }) => {
         </div>
 
         <div className="p-6">
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <Tabs defaultValue="products" className="w-full">
+            <TabsList className="grid w-full grid-cols-2 mb-6">
+              <TabsTrigger value="products" className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white">
+                Gestionar Productos
+              </TabsTrigger>
+              <TabsTrigger value="settings" className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white">
+                Configuración del Sitio
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="settings" className="space-y-6">
+              <div>
+                <h3 className="text-lg font-semibold text-emerald-800 mb-4">Logo de la Página</h3>
+                
+                <Tabs value={logoOption} onValueChange={setLogoOption} className="w-full">
+                  <TabsList className="grid w-full grid-cols-2 mb-4">
+                    <TabsTrigger value="url" className="text-xs">URL del Logo</TabsTrigger>
+                    <TabsTrigger value="upload" className="text-xs">Subir Logo</TabsTrigger>
+                  </TabsList>
+                  
+                  <TabsContent value="url">
+                    <Input
+                      value={logoUrl}
+                      onChange={(e) => handleLogoUrlChange(e.target.value)}
+                      placeholder="https://ejemplo.com/logo.png"
+                      className="border-emerald-200 focus:border-emerald-400"
+                    />
+                  </TabsContent>
+                  
+                  <TabsContent value="upload">
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-4">
+                        <input
+                          ref={logoInputRef}
+                          type="file"
+                          accept="image/*"
+                          onChange={handleLogoUpload}
+                          className="hidden"
+                          id="logo-upload"
+                        />
+                        <label
+                          htmlFor="logo-upload"
+                          className="flex items-center gap-2 px-4 py-2 bg-emerald-100 text-emerald-700 rounded-lg cursor-pointer hover:bg-emerald-200 transition-colors duration-200 border border-emerald-200"
+                        >
+                          <Upload className="w-4 h-4" />
+                          Seleccionar Logo
+                        </label>
+                        {selectedLogo && (
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={clearLogo}
+                            className="text-emerald-600 border-emerald-200 hover:bg-emerald-50"
+                          >
+                            <X className="w-4 h-4 mr-2" />
+                            Quitar
+                          </Button>
+                        )}
+                      </div>
+                      
+                      {selectedLogo && (
+                        <div className="text-sm text-emerald-600 bg-emerald-50 p-2 rounded">
+                          <strong>Logo seleccionado:</strong> {selectedLogo.name} ({(selectedLogo.size / 1024 / 1024).toFixed(2)} MB)
+                        </div>
+                      )}
+                    </div>
+                  </TabsContent>
+                </Tabs>
+                
+                {/* Preview del logo */}
+                {logoPreview && (
+                  <div className="mt-4">
+                    <p className="text-sm font-medium text-emerald-700 mb-2">Vista previa del logo:</p>
+                    <div className="relative inline-block">
+                      <img
+                        src={logoPreview}
+                        alt="Vista previa del logo"
+                        className="w-16 h-16 object-cover rounded-lg border border-emerald-200"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          e.target.nextSibling.style.display = 'flex';
+                        }}
+                      />
+                      <div 
+                        className="w-16 h-16 bg-emerald-100 rounded-lg border border-emerald-200 hidden items-center justify-center"
+                      >
+                        <div className="text-center text-emerald-600">
+                          <Image className="w-4 h-4 mx-auto mb-1" />
+                          <p className="text-xs">Error</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="products">
+              <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-emerald-700 mb-2">Categoría</label>
