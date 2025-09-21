@@ -143,8 +143,6 @@ const Home = () => {
           </p>
         </div>
 
-        <SearchBar onSearch={handleSearch} />
-
         <Tabs defaultValue="juegos" className="w-full">
           <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8 mb-8 bg-white/80 backdrop-blur-sm p-2 rounded-xl shadow-lg border border-emerald-100">
             <TabsTrigger 
