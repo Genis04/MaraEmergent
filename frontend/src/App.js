@@ -231,7 +231,7 @@ const Home = () => {
         />
       )}
 
-      {showAdmin && <AdminPanel onClose={handleAdminClose} />}
+      {showAdmin && <AdminPanel onClose={handleAdminClose} onLogoChange={handleLogoChange} />}
     </div>
   );
 };
