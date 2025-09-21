@@ -49,17 +49,26 @@ const Home = () => {
   };
 
   const renderProductGrid = (products) => {
-    if (!products || products.length === 0) {
+    const filteredProducts = filterProducts(products);
+    
+    if (!filteredProducts || filteredProducts.length === 0) {
       return (
-        <div className="flex items-center justify-center h-64 text-emerald-600">
-          <p className="text-lg">No hay productos disponibles en esta categoría</p>
+        <div className="flex flex-col items-center justify-center h-64 text-emerald-600">
+          {searchTerm ? (
+            <>
+              <p className="text-lg mb-2">No se encontraron productos para "{searchTerm}"</p>
+              <p className="text-sm text-emerald-500">Intenta con otros términos de búsqueda</p>
+            </>
+          ) : (
+            <p className="text-lg">No hay productos disponibles en esta categoría</p>
+          )}
         </div>
       );
     }
 
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {products.map((product) => (
+        {filteredProducts.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
       </div>
