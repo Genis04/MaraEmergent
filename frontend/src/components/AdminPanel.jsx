@@ -9,13 +9,18 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { X, Plus, Save, Trash2, Upload, Image } from 'lucide-react';
 import { mockData } from '../mock';
 
-export const AdminPanel = ({ onClose }) => {
+export const AdminPanel = ({ onClose, onLogoChange }) => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedSubcategory, setSelectedSubcategory] = useState('');
   const [imageOption, setImageOption] = useState('url'); // 'url' or 'upload'
   const [selectedImage, setSelectedImage] = useState(null);
   const [imagePreview, setImagePreview] = useState('');
+  const [logoOption, setLogoOption] = useState('url'); // 'url' or 'upload'
+  const [selectedLogo, setSelectedLogo] = useState(null);
+  const [logoPreview, setLogoPreview] = useState('');
+  const [logoUrl, setLogoUrl] = useState('');
   const fileInputRef = useRef(null);
+  const logoInputRef = useRef(null);
   const [formData, setFormData] = useState({
     titulo: '',
     descripcion: '',
