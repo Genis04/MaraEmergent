@@ -42,6 +42,56 @@ export const AdminPanel = ({ onClose, onLogoChange }) => {
     animes: { name: 'Animes' }
   };
 
+  const handleLogoUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      // Validar que sea una imagen
+      if (!file.type.startsWith('image/')) {
+        alert('Por favor selecciona un archivo de imagen válido');
+        return;
+      }
+      
+      // Validar tamaño (máximo 2MB para logos)
+      if (file.size > 2 * 1024 * 1024) {
+        alert('El logo es demasiado grande. Por favor selecciona una imagen menor a 2MB');
+        return;
+      }
+
+      setSelectedLogo(file);
+      
+      // Crear preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setLogoPreview(reader.result);
+        if (onLogoChange) {
+          onLogoChange(reader.result);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const clearLogo = () => {
+    setSelectedLogo(null);
+    setLogoPreview('');
+    setLogoUrl('');
+    if (logoInputRef.current) {
+      logoInputRef.current.value = '';
+    }
+    if (onLogoChange) {
+      onLogoChange('');
+    }
+  };
+
+  const handleLogoUrlChange = (url) => {
+    setLogoUrl(url);
+    setLogoPreview(url);
+    setSelectedLogo(null);
+    if (onLogoChange) {
+      onLogoChange(url);
+    }
+  };
+
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
