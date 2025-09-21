@@ -29,20 +29,18 @@ export const Header = ({ onAdminClick, onSearch, logo }) => {
             <span className="text-2xl font-bold text-emerald-800">Mara Productions</span>
           </Link>
           
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onAdminClick}
-            className="border-emerald-200 text-emerald-700 hover:bg-emerald-50 hover:text-emerald-800 hover:border-emerald-300 transition-all duration-200"
-          >
-            <Settings className="w-4 h-4 mr-2" />
-            Admin
-          </Button>
-        </div>
-        
-        {/* Barra de búsqueda debajo del header */}
-        <div className="py-4 border-t border-emerald-50">
-          <SearchBar onSearch={onSearch} />
+          <div className="flex items-center space-x-4">
+            <SearchBar onSearch={onSearch} />
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onAdminClick}
+              className="border-emerald-200 text-emerald-700 hover:bg-emerald-50 hover:text-emerald-800 hover:border-emerald-300 transition-all duration-200"
+            >
+              <Settings className="w-4 h-4 mr-2" />
+              Admin
+            </Button>
+          </div>
         </div>
       </div>
     </header>
