@@ -510,6 +510,8 @@ export const AdminPanel = ({ onClose, onLogoChange }) => {
               </Button>
             </div>
           </form>
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     </div>
