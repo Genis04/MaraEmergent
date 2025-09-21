@@ -1,19 +1,17 @@
 from fastapi import APIRouter, HTTPException, Query
 from typing import List, Optional
 from models.Product import Product, ProductCreate, ProductUpdate
-from motor.motor_asyncio import AsyncIOMotorClient
 import os
 from datetime import datetime
 import logging
 
 router = APIRouter()
-
-# MongoDB connection
-mongo_url = os.environ['MONGO_URL']
-client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ['DB_NAME']]
-
 logger = logging.getLogger(__name__)
+
+# Función para obtener la base de datos (se pasará desde server.py)
+def get_db():
+    from server import db
+    return db
 
 @router.get("/products", response_model=List[Product])
 async def get_products(
@@ -22,6 +20,7 @@ async def get_products(
     search: Optional[str] = Query(None)
 ):
     try:
+        db = get_db()
         # Construir filtros
         filters = {}
         if categoria:
@@ -49,6 +48,7 @@ async def get_products(
 @router.post("/products", response_model=Product)
 async def create_product(product_data: ProductCreate):
     try:
+        db = get_db()
         product_dict = product_data.dict()
         product_obj = Product(**product_dict)
         
@@ -67,6 +67,7 @@ async def create_product(product_data: ProductCreate):
 @router.put("/products/{product_id}", response_model=Product)
 async def update_product(product_id: str, product_data: ProductUpdate):
     try:
+        db = get_db()
         # Verificar que el producto existe
         existing_product = await db.products.find_one({"id": product_id})
         if not existing_product:
@@ -98,6 +99,7 @@ async def update_product(product_id: str, product_data: ProductUpdate):
 @router.delete("/products/{product_id}")
 async def delete_product(product_id: str):
     try:
+        db = get_db()
         # Verificar que el producto existe
         existing_product = await db.products.find_one({"id": product_id})
         if not existing_product:
