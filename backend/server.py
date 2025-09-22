@@ -15,6 +15,8 @@ from routes.products import router as products_router
 from routes.config import router as config_router
 from routes.auth import router as auth_router
 from routes.pdf import router as pdf_router
+from routes.supabase_products import router as supabase_products_router
+from routes.supabase_config import router as supabase_config_router
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
