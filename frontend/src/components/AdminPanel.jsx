@@ -46,6 +46,9 @@ export const AdminPanel = ({ onClose, onLogoChange, onSocialConfigUpdate }) => {
 
   const handleSocialConfigSave = (socialConfig) => {
     console.log('Guardando configuración social:', socialConfig);
+    if (onSocialConfigUpdate) {
+      onSocialConfigUpdate(socialConfig);
+    }
     // Aquí se implementará la integración con el backend
     alert('Configuración social guardada exitosamente');
   };
