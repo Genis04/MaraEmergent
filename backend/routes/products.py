@@ -68,7 +68,6 @@ async def create_product(product_data: ProductCreate):
 @router.put("/products/{product_id}", response_model=Product)
 async def update_product(product_id: str, product_data: ProductUpdate):
     try:
-        db = get_db()
         # Verificar que el producto existe
         existing_product = await db.products.find_one({"id": product_id})
         if not existing_product:
