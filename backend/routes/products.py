@@ -23,7 +23,6 @@ async def get_products(
     search: Optional[str] = Query(None)
 ):
     try:
-        db = get_db()
         # Construir filtros
         filters = {}
         if categoria:
