@@ -14,6 +14,8 @@ const Home = () => {
   const [showAuth, setShowAuth] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [logo, setLogo] = useState('');
+  const [socialNetworks, setSocialNetworks] = useState([]);
+  const [businessGroups, setBusinessGroups] = useState([]);
 
   const handleAdminClick = () => {
     setShowAuth(true);
@@ -38,6 +40,11 @@ const Home = () => {
 
   const handleLogoChange = (newLogo) => {
     setLogo(newLogo);
+  };
+
+  const handleSocialConfigUpdate = (config) => {
+    setSocialNetworks(config.socialNetworks || []);
+    setBusinessGroups(config.businessGroups || []);
   };
 
   const filterProducts = (products) => {
