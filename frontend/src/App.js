@@ -5,7 +5,7 @@ import { Header } from "./components/Header";
 import { ProductCard } from "./components/ProductCard";
 import { AdminPanel } from "./components/AdminPanel";
 import { AuthModal } from "./components/AuthModal";
-import { SearchBar } from "./components/SearchBar";
+import { Footer } from "./components/Footer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
 import { mockData } from "./mock";
 
