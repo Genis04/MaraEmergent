@@ -11,11 +11,6 @@ logger = logging.getLogger(__name__)
 # Importar la base de datos desde el módulo principal
 from server import db
 
-# Función para obtener la base de datos (se pasará desde server.py)
-def get_db():
-    from server import db
-    return db
-
 @router.get("/products", response_model=List[Product])
 async def get_products(
     categoria: Optional[str] = Query(None),
