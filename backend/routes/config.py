@@ -1,18 +1,14 @@
 from fastapi import APIRouter, HTTPException
 from models.SiteConfig import SiteConfig, SiteConfigCreate, SiteConfigUpdate
-from motor.motor_asyncio import AsyncIOMotorClient
 import os
 from datetime import datetime
 import logging
 
 router = APIRouter()
-
-# MongoDB connection
-mongo_url = os.environ['MONGO_URL']
-client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ['DB_NAME']]
-
 logger = logging.getLogger(__name__)
+
+# Importar la base de datos desde el módulo principal
+from server import db
 
 @router.get("/config/{key}")
 async def get_config(key: str):
