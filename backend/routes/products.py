@@ -99,7 +99,6 @@ async def update_product(product_id: str, product_data: ProductUpdate):
 @router.delete("/products/{product_id}")
 async def delete_product(product_id: str):
     try:
-        db = get_db()
         # Verificar que el producto existe
         existing_product = await db.products.find_one({"id": product_id})
         if not existing_product:
