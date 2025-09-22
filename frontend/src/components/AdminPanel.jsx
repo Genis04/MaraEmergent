@@ -8,6 +8,8 @@ import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { X, Plus, Save, Trash2, Upload, Image } from 'lucide-react';
 import { mockData } from '../mock';
+import { SocialConfig } from './SocialConfig';
+import { PDFUploader } from './PDFUploader';
 
 export const AdminPanel = ({ onClose, onLogoChange }) => {
   const [selectedCategory, setSelectedCategory] = useState('');
