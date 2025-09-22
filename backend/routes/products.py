@@ -50,7 +50,6 @@ async def get_products(
 @router.post("/products", response_model=Product)
 async def create_product(product_data: ProductCreate):
     try:
-        db = get_db()
         product_dict = product_data.dict()
         product_obj = Product(**product_dict)
         
