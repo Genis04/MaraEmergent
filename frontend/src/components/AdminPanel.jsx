@@ -11,7 +11,7 @@ import { mockData } from '../mock';
 import { SocialConfig } from './SocialConfig';
 import { PDFUploader } from './PDFUploader';
 
-export const AdminPanel = ({ onClose, onLogoChange }) => {
+export const AdminPanel = ({ onClose, onLogoChange, onSocialConfigUpdate }) => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedSubcategory, setSelectedSubcategory] = useState('');
   const [imageOption, setImageOption] = useState('url'); // 'url' or 'upload'
