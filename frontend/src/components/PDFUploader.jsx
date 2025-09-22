@@ -2,12 +2,17 @@ import React, { useState, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Upload, FileText, X, Download, AlertCircle, CheckCircle } from 'lucide-react';
+import axios from 'axios';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const API = `${BACKEND_URL}/api`;
 
 export const PDFUploader = ({ onProductsExtracted }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [extractedProducts, setExtractedProducts] = useState([]);
   const [error, setError] = useState('');
+  const [processingInfo, setProcessingInfo] = useState('');
   const fileInputRef = useRef(null);
 
   const handleFileSelect = (event) => {
@@ -28,6 +33,7 @@ export const PDFUploader = ({ onProductsExtracted }) => {
       setSelectedFile(file);
       setError('');
       setExtractedProducts([]);
+      setProcessingInfo('');
     }
   };
 
@@ -35,6 +41,7 @@ export const PDFUploader = ({ onProductsExtracted }) => {
     setSelectedFile(null);
     setExtractedProducts([]);
     setError('');
+    setProcessingInfo('');
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -45,63 +52,106 @@ export const PDFUploader = ({ onProductsExtracted }) => {
     
     setIsProcessing(true);
     setError('');
+    setProcessingInfo('Subiendo archivo...');
     
     try {
-      // Simular procesamiento de PDF (en un caso real, esto sería una llamada al backend)
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const formData = new FormData();
+      formData.append('file', selectedFile);
       
-      // Datos de ejemplo extraídos del PDF
-      const mockExtractedProducts = [
-        {
-          titulo: 'Call of Duty: Modern Warfare III',
-          descripcion: 'Shooter en primera persona con campaña épica',
-          pais: 'Estados Unidos',
-          fecha_lanzamiento: '2023-11-10',
-          plataformas: ['PC', 'PlayStation 5', 'Xbox Series X'],
-          categoria: 'juegos',
-          subcategoria: 'pc'
-        },
-        {
-          titulo: 'Spider-Man 2',
-          descripcion: 'Aventura de superhéroes en Nueva York',
-          pais: 'Estados Unidos',
-          fecha_lanzamiento: '2023-10-20',
-          plataformas: ['PlayStation 5'],
-          categoria: 'juegos',
-          subcategoria: 'pc'
-        },
-        {
-          titulo: 'Adobe Photoshop 2024',
-          descripcion: 'Software profesional de edición de imágenes',
-          pais: 'Estados Unidos',
-          fecha_lanzamiento: '2023-10-15',
-          plataformas: ['Windows', 'macOS'],
-          categoria: 'aplicaciones',
-          subcategoria: 'pc'
-        }
-      ];
+      setProcessingInfo('Analizando contenido del PDF...');
       
-      setExtractedProducts(mockExtractedProducts);
+      const response = await axios.post(`${API}/pdf/upload`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        },
+        timeout: 30000 // 30 segundos
+      });
+      
+      if (response.data.success) {
+        setExtractedProducts(response.data.products);
+        setProcessingInfo(`Procesamiento completado. Se encontraron ${response.data.products.length} productos.`);
+      } else {
+        setError('No se pudieron extraer productos del PDF');
+      }
       
     } catch (err) {
-      setError('Error al procesar el PDF. Por favor intenta nuevamente.');
       console.error('Error processing PDF:', err);
+      if (err.response?.data?.detail) {
+        setError(err.response.data.detail);
+      } else if (err.code === 'ECONNABORTED') {
+        setError('El procesamiento tomó demasiado tiempo. Intenta con un archivo más pequeño.');
+      } else {
+        setError('Error al procesar el PDF. Por favor intenta nuevamente.');
+      }
     } finally {
       setIsProcessing(false);
     }
   };
 
-  const addExtractedProducts = () => {
-    if (onProductsExtracted && extractedProducts.length > 0) {
-      onProductsExtracted(extractedProducts);
-      alert(`${extractedProducts.length} productos agregados exitosamente al catálogo`);
-      clearFile();
+  const addExtractedProducts = async () => {
+    if (!extractedProducts.length) return;
+    
+    try {
+      setIsProcessing(true);
+      setProcessingInfo('Guardando productos en el catálogo...');
+      
+      const response = await axios.post(`${API}/pdf/save-products`, extractedProducts);
+      
+      if (response.data.success) {
+        if (onProductsExtracted) {
+          onProductsExtracted(extractedProducts);
+        }
+        alert(`${response.data.saved_count} productos agregados exitosamente al catálogo`);
+        clearFile();
+      } else {
+        setError('Error al guardar los productos');
+      }
+      
+    } catch (err) {
+      console.error('Error saving products:', err);
+      setError('Error al guardar los productos en el catálogo');
+    } finally {
+      setIsProcessing(false);
+      setProcessingInfo('');
     }
   };
 
   const downloadTemplate = () => {
-    // En un caso real, esto descargaría una plantilla PDF de ejemplo
-    alert('Función de descarga de plantilla en desarrollo');
+    // Crear un PDF de ejemplo con texto simulado
+    const templateText = `
+CATÁLOGO DE PRODUCTOS - EJEMPLO
+
+Producto: Cyberpunk 2077
+Descripción: Juego de rol futurista en primera persona ambientado en Night City
+País: Polonia
+Fecha: 2020-12-10
+Plataformas: PC, PlayStation 5, Xbox Series X
+Categoría: Juegos
+
+Producto: The Witcher 3: Wild Hunt
+Descripción: RPG de fantasía medieval con Geralt de Rivia
+País: Polonia  
+Fecha: 2015-05-19
+Plataformas: PC, PlayStation 4, Xbox One, Nintendo Switch
+Categoría: Juegos
+
+Producto: Adobe Photoshop 2024
+Descripción: Software profesional de edición de imágenes y diseño gráfico
+País: Estados Unidos
+Fecha: 2023-10-15
+Plataformas: Windows, macOS
+Categoría: Aplicaciones
+    `;
+    
+    const blob = new Blob([templateText], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'plantilla-catalogo-ejemplo.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
 
   return (
