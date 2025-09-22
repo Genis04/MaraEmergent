@@ -60,6 +60,7 @@ async def get_status_checks():
 api_router.include_router(products_router, tags=["products"])
 api_router.include_router(config_router, tags=["config"])
 api_router.include_router(auth_router, tags=["auth"])
+api_router.include_router(pdf_router, tags=["pdf"])
 
 # Include the main API router in the app
 app.include_router(api_router)
