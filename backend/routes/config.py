@@ -1,17 +1,20 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from models.SiteConfig import SiteConfig, SiteConfigCreate, SiteConfigUpdate
 import os
 from datetime import datetime
 import logging
+from motor.motor_asyncio import AsyncIOMotorDatabase
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
 
-# Importar la base de datos desde el módulo principal
-from server import db
+# Dependency para obtener la base de datos
+async def get_database() -> AsyncIOMotorDatabase:
+    from server import db
+    return db
 
 @router.get("/config/{key}")
-async def get_config(key: str):
+async def get_config(key: str, db: AsyncIOMotorDatabase = Depends(get_database)):
     try:
         config = await db.site_config.find_one({"key": key})
         if config:
@@ -24,7 +27,7 @@ async def get_config(key: str):
         raise HTTPException(status_code=500, detail="Error interno del servidor")
 
 @router.post("/config", response_model=SiteConfig)
-async def update_config(config_data: SiteConfigCreate):
+async def update_config(config_data: SiteConfigCreate, db: AsyncIOMotorDatabase = Depends(get_database)):
     try:
         # Verificar si ya existe la configuración
         existing_config = await db.site_config.find_one({"key": config_data.key})
