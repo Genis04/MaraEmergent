@@ -1,21 +1,25 @@
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query, Depends
 from typing import List, Optional
 from models.Product import Product, ProductCreate, ProductUpdate
 import os
 from datetime import datetime
 import logging
+from motor.motor_asyncio import AsyncIOMotorDatabase
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
 
-# Importar la base de datos desde el módulo principal
-from server import db
+# Dependency para obtener la base de datos
+async def get_database() -> AsyncIOMotorDatabase:
+    from server import db
+    return db
 
 @router.get("/products", response_model=List[Product])
 async def get_products(
     categoria: Optional[str] = Query(None),
     subcategoria: Optional[str] = Query(None),
-    search: Optional[str] = Query(None)
+    search: Optional[str] = Query(None),
+    db: AsyncIOMotorDatabase = Depends(get_database)
 ):
     try:
         # Construir filtros
@@ -43,7 +47,10 @@ async def get_products(
         raise HTTPException(status_code=500, detail="Error interno del servidor")
 
 @router.post("/products", response_model=Product)
-async def create_product(product_data: ProductCreate):
+async def create_product(
+    product_data: ProductCreate,
+    db: AsyncIOMotorDatabase = Depends(get_database)
+):
     try:
         product_dict = product_data.dict()
         product_obj = Product(**product_dict)
@@ -61,7 +68,11 @@ async def create_product(product_data: ProductCreate):
         raise HTTPException(status_code=500, detail="Error interno del servidor")
 
 @router.put("/products/{product_id}", response_model=Product)
-async def update_product(product_id: str, product_data: ProductUpdate):
+async def update_product(
+    product_id: str, 
+    product_data: ProductUpdate,
+    db: AsyncIOMotorDatabase = Depends(get_database)
+):
     try:
         # Verificar que el producto existe
         existing_product = await db.products.find_one({"id": product_id})
@@ -92,7 +103,10 @@ async def update_product(product_id: str, product_data: ProductUpdate):
         raise HTTPException(status_code=500, detail="Error interno del servidor")
 
 @router.delete("/products/{product_id}")
-async def delete_product(product_id: str):
+async def delete_product(
+    product_id: str,
+    db: AsyncIOMotorDatabase = Depends(get_database)
+):
     try:
         # Verificar que el producto existe
         existing_product = await db.products.find_one({"id": product_id})
