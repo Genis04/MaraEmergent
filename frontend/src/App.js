@@ -215,21 +215,10 @@ const Home = () => {
         </Tabs>
       </main>
 
-      <footer className="bg-emerald-900 text-white py-12 mt-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h3 className="text-2xl font-bold mb-4">Mara Productions</h3>
-            <p className="text-emerald-200 mb-6 max-w-2xl mx-auto">
-              Tu fuente confiable para el mejor entretenimiento digital. Catálogo actualizado constantemente con las últimas novedades.
-            </p>
-            <div className="border-t border-emerald-800 pt-6">
-              <p className="text-emerald-300 text-sm">
-                © 2024 Mara Productions. Todos los derechos reservados.
-              </p>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer 
+        socialNetworks={socialNetworks}
+        businessGroups={businessGroups}
+      />
 
       {showAuth && (
         <AuthModal 
@@ -238,7 +227,13 @@ const Home = () => {
         />
       )}
 
-      {showAdmin && <AdminPanel onClose={handleAdminClose} onLogoChange={handleLogoChange} />}
+      {showAdmin && (
+        <AdminPanel 
+          onClose={handleAdminClose} 
+          onLogoChange={handleLogoChange}
+          onSocialConfigUpdate={handleSocialConfigUpdate}
+        />
+      )}
     </div>
   );
 };
