@@ -44,6 +44,18 @@ export const AdminPanel = ({ onClose, onLogoChange }) => {
     animes: { name: 'Animes' }
   };
 
+  const handleSocialConfigSave = (socialConfig) => {
+    console.log('Guardando configuración social:', socialConfig);
+    // Aquí se implementará la integración con el backend
+    alert('Configuración social guardada exitosamente');
+  };
+
+  const handlePDFProductsExtracted = (products) => {
+    console.log('Productos extraídos del PDF:', products);
+    // Aquí se implementará la integración con el backend para agregar los productos
+    alert(`${products.length} productos agregados al catálogo desde el PDF`);
+  };
+
   const handleLogoUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
