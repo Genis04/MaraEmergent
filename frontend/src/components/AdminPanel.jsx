@@ -192,14 +192,28 @@ export const AdminPanel = ({ onClose, onLogoChange }) => {
 
         <div className="p-6">
           <Tabs defaultValue="products" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="products" className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white">
-                Gestionar Productos
+            <TabsList className="grid w-full grid-cols-4 mb-6">
+              <TabsTrigger value="products" className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white text-xs">
+                Productos
               </TabsTrigger>
-              <TabsTrigger value="settings" className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white">
-                Configuración del Sitio
+              <TabsTrigger value="settings" className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white text-xs">
+                Logo
+              </TabsTrigger>
+              <TabsTrigger value="social" className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white text-xs">
+                Redes Sociales
+              </TabsTrigger>
+              <TabsTrigger value="pdf" className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white text-xs">
+                Importar PDF
               </TabsTrigger>
             </TabsList>
+
+            <TabsContent value="social" className="space-y-6">
+              <SocialConfig onSave={handleSocialConfigSave} />
+            </TabsContent>
+
+            <TabsContent value="pdf" className="space-y-6">
+              <PDFUploader onProductsExtracted={handlePDFProductsExtracted} />
+            </TabsContent>
 
             <TabsContent value="settings" className="space-y-6">
               <div>
